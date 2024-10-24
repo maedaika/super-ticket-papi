@@ -33,6 +33,10 @@
 					<classifier>mule-application</classifier>
 				</configuration>
 			</plugin>
+
+			<pluginGroups>
+			<pluginGroup>org.mule.tools</pluginGroup>
+			</pluginGroups>
 		</plugins>
 	</build>
 
