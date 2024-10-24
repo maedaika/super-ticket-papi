@@ -74,6 +74,6 @@ jobs:
         mvn -B mule:deploy -Dartifact=$artifactName \
           -Danypoint.username="$USERNAME" \
           -Danypoint.password="$PASSWORD" \
-          -Danypoint.environment="Sandbox" \
+          -Danypoint.environment="prod" \
           -Danypoint.region="us-east-1"
           
