@@ -38,10 +38,6 @@
         </plugins>
     </build>
 
-    <pluginGroups>
-        <pluginGroup>org.mule.tools</pluginGroup>
-    </pluginGroups>
-
     <dependencies>
         <dependency>
             <groupId>org.mule.connectors</groupId>
