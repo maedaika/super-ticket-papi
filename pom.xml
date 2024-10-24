@@ -65,13 +65,7 @@
 			<version>1.2.2</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-		<dependency>
-			<groupId>1d27ccd0-8349-4528-9938-bc697c394887</groupId>
-			<artifactId>super-ticket-papi</artifactId>
-			<version>1.0.0</version>
-			<classifier>oas</classifier>
-			<type>zip</type>
-		</dependency>
+
 		<dependency>
 			<groupId>org.mule.modules</groupId>
 			<artifactId>mule-apikit-module</artifactId>
