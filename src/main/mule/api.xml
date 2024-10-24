@@ -54,7 +54,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 		<flow-ref doc:name="get-tickets-data-by-bid" doc:id="78278adb-a3dc-4ddf-99ee-7407b68bcebd" name="get-tickets-data-by-bid" />
 		<logger
 			level="INFO"
-			doc:name="Logger"
+			doc:name="Loggers"
 			doc:id="38ccb500-4a2f-419f-b7f4-a2452674f1aa"
 			message="Flow End" />
 	</flow>
