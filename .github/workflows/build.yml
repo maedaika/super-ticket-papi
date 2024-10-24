@@ -72,5 +72,4 @@ jobs:
           -Danypoint.username="${{ secrets.anypoint_platform_username }}" \
           -Danypoint.password="${{ secrets.anypoint_platform_password }}" \
           -Danypoint.environment="dev" \ # Altere para o ambiente correto, ex: prod, training, dev
-          -Danypoint.applicationName="super-ticket-papi-app" \
-          -Danypoint.region="us-east-1"
+          -Danypoint.applicationName="super-ticket-papi-app" 
