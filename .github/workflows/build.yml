@@ -1,4 +1,4 @@
-name: Build and Deploy to Sandbox teste
+name: Build and Deploy to Sandbox Test
 
 on:
   push:
@@ -51,6 +51,17 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+    - name: Set up Maven settings
+      run: |
+        echo "<settings>
+                <servers>
+                  <server>
+                    <id>anypoint-exchange-v3</id>
+                    <username>${{ secrets.anypoint_platform_username }}</username>
+                    <password>${{ secrets.anypoint_platform_password }}</password>
+                  </server>
+                </servers>
+              </settings>" > $HOME/.m2/settings.xml
     - uses: actions/download-artifact@v3
       with:
         name: artifacts
@@ -60,7 +71,8 @@ jobs:
         PASSWORD: ${{ secrets.anypoint_platform_password }}
       run: |
         artifactName=$(ls *.jar | head -1)
-        mvn deploy -DmuleDeploy \
-         -Dmule.artifact=$artifactName \
-         -Danypoint.username="$USERNAME" \
-         -Danypoint.password="$PASSWORD" 
+        mvn -B mule:deploy -Dartifact=$artifactName \
+          -Danypoint.username="$USERNAME" \
+          -Danypoint.password="$PASSWORD" \
+          -Danypoint.environment="Sandbox" \
+          -Danypoint.region="us-east-1"
