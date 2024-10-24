@@ -76,3 +76,4 @@ jobs:
           -Danypoint.password="$PASSWORD" \
           -Danypoint.environment="Sandbox" \
           -Danypoint.region="us-east-1"
+          
