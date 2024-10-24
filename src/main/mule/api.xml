@@ -45,7 +45,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 		<error-handler ref="api-console-error-handler" />
 	</flow>
 	<flow name="get:\tickets\(BID):apiConfig">
-		<ee:transform>
+		<ee:transform doc:name="Transform">
 			<ee:variables>
 				<ee:set-variable variableName="BID">attributes.uriParams.'BID'
 				</ee:set-variable>
