@@ -14,25 +14,42 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<app.runtime>4.4.0-20220824</app.runtime>
-		<mule.maven.plugin.version>3.8.2</mule.maven.plugin.version>
+		<mule.maven.plugin.version>3.8.0</mule.maven.plugin.version>
 	</properties>
-		
+
 	<build>
-			  <plugins>
-			    <plugin>
-			      <groupId>org.mule.tools.maven</groupId>
-			      <artifactId>mule-maven-plugin</artifactId>
-			      <version>3.8.2</version>
-			      <configuration>
-			        <environment>prod</environment> <!-- O ambiente que você selecionou, por exemplo: dev, prod, training -->
-			        <applicationName>super-ticket-papi-app</applicationName> <!-- Nome da aplicação no Anypoint -->
-			        <region>us-east-1</region> <!-- Região do deploy, ajuste conforme necessário -->
-			        <username>${env.ANYPOINT_USERNAME}</username>
-			        <password>${env.ANYPOINT_PASSWORD}</password>
-			      </configuration>
-			    </plugin>
-			  </plugins>
-			</build>
+
+    <plugins>
+   
+
+			<plugin> 
+			  <groupId>org.apache.maven.plugins</groupId> 
+			  <artifactId>maven-clean-plugin</artifactId> 
+			  <version>3.0.0</version> 
+			  <configuration> 
+			    <cloudHubDeployment> 
+			      <uri>https://anypoint.mulesoft.com</uri> 
+			      <muleVersion>${anypoint.muleVersion}</muleVersion>
+			      <username>${anypoint.username}</username> 
+			      <password>${anypoint.password}</password>
+			      <applicationName>${anypoint.appName}</applicationName>
+			      <environment>${anypoint.env}</environment>  
+			      <region>${anypoint.region}</region> 
+			      <workers>${anypoint.workers}</workers> 
+			      <objectStoreV2>true</objectStoreV2> 
+			    </cloudHubDeployment> 
+			  </configuration> 
+			</plugin>
+
+            <plugin>
+                <groupId>org.mule.tools.maven</groupId>
+                <artifactId>mule-maven-plugin</artifactId>
+                <version>${mule.maven.plugin.version}</version>
+                <extensions>true</extensions>
+            </plugin>
+
+    </plugins>
+  </build>
 		
 	
 	<dependencies>
@@ -48,7 +65,13 @@
 			<version>1.2.2</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-
+		<dependency>
+			<groupId>1d27ccd0-8349-4528-9938-bc697c394887</groupId>
+			<artifactId>super-ticket-papi</artifactId>
+			<version>1.0.0</version>
+			<classifier>oas</classifier>
+			<type>zip</type>
+		</dependency>
 		<dependency>
 			<groupId>org.mule.modules</groupId>
 			<artifactId>mule-apikit-module</artifactId>
