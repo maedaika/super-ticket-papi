@@ -2,10 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>super-ticket-papi</groupId>
-    <artifactId>super-ticket-papi-app</artifactId>
+    <artifactId>super-ticket-papi</artifactId>
     <version>1.0.0</version>
     <packaging>mule-application</packaging>
 
@@ -14,12 +15,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<app.runtime>4.4.0</app.runtime>
-		<mule.maven.plugin.version>3.8.0</mule.maven.plugin.version>
-		<app.name>amartinez17-github-actions</app.name>
-		<env>prod</env>
-		<munit.version>2.3.13</munit.version>
+        <app.runtime>4.4.0</app.runtime>
+        <mule.maven.plugin.version>3.8.0</mule.maven.plugin.version>
+        <app.name>super-ticket-papi-app</app.name>
+        <env>prod</env>
+        <munit.version>2.3.13</munit.version>
     </properties>
 
     <build>
@@ -29,27 +29,27 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
-           			<plugin>
-				<groupId>org.mule.tools.maven</groupId>
-				<artifactId>mule-maven-plugin</artifactId>
-				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
-				<configuration>
-					<cloudHubDeployment>
-						<uri>https://anypoint.mulesoft.com</uri>
-						<muleVersion>${app.runtime}</muleVersion>
-						<username>${anypoint.username}</username>
-						<password>${anypoint.password}</password>
-						<applicationName>${app.name}</applicationName>
-						<environment>${env}</environment>
-						<workerType>MICRO</workerType>
-						<region>us-east-2</region>
-						<workers>1</workers>
-												
-					</cloudHubDeployment>
-					<classifier>mule-application</classifier>
-				</configuration>
-			</plugin>
+
+            <plugin>
+                <groupId>org.mule.tools.maven</groupId>
+                <artifactId>mule-maven-plugin</artifactId>
+                <version>${mule.maven.plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <cloudHubDeployment>
+                        <uri>https://anypoint.mulesoft.com</uri>
+                        <muleVersion>${app.runtime}</muleVersion>
+                        <username>${anypoint.username}</username>
+                        <password>${anypoint.password}</password>
+                        <applicationName>${app.name}</applicationName>
+                        <environment>${env}</environment>
+                        <workerType>MICRO</workerType>
+                        <region>us-east-2</region>
+                        <workers>1</workers>
+                    </cloudHubDeployment>
+                    <classifier>mule-application</classifier>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -66,7 +66,6 @@
             <version>1.2.2</version>
             <classifier>mule-plugin</classifier>
         </dependency>
-
         <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-apikit-module</artifactId>
