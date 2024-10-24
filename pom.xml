@@ -16,29 +16,29 @@
 		<app.runtime>4.4.0-20220824</app.runtime>
 		<mule.maven.plugin.version>3.8.7</mule.maven.plugin.version>
 	</properties>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>3.0.0</version>
+        </plugin>
+        <plugin>
+            <groupId>org.mule.tools.maven</groupId>
+            <artifactId>mule-maven-plugin</artifactId>
+            <version>${mule.maven.plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+                <classifier>mule-application</classifier>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.mule.tools.maven</groupId>
-				<artifactId>mule-maven-plugin</artifactId>
-				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
-				<configuration>
-					<classifier>mule-application</classifier>
-				</configuration>
-			</plugin>
+<pluginGroups>
+    <pluginGroup>org.mule.tools</pluginGroup>
+</pluginGroups>
 
-			<pluginGroups>
-			<pluginGroup>org.mule.tools</pluginGroup>
-			</pluginGroups>
-		</plugins>
-	</build>
 
 	<dependencies>
 		<dependency>
