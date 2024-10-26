@@ -17,6 +17,7 @@
 		<app.name>super-ticket-papi-app</app.name>
 		<env>prod</env>
 		<munit.version>2.3.13</munit.version>
+		<secure.key>${decryption.key}</secure.key>
 	</properties>
 
 	<build>
