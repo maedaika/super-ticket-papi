@@ -26,9 +26,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v3
         with:
     # A list of files, directories, and wildcard patterns to cache and restore
           path: /home/runner/.m2/repository
@@ -101,7 +101,7 @@ jobs:
           mv $artifactName1 $artifactName2
           
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v3
         with:
           # Artifact name
           name: build_artifact
@@ -116,9 +116,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v3
         with:
     # A list of files, directories, and wildcard patterns to cache and restore
           path: /home/runner/.m2/repository
@@ -158,9 +158,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v3
         with:
     # A list of files, directories, and wildcard patterns to cache and restore
           path: /home/runner/.m2/repository
@@ -196,9 +196,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v3
         with:
     # A list of files, directories, and wildcard patterns to cache and restore
           path: /home/runner/.m2/repository
