@@ -75,6 +75,14 @@
 			<version>1.2.7</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+		<dependency>
+			<groupId>1d27ccd0-8349-4528-9938-bc697c394887</groupId>
+			<artifactId>super-ticket-papi</artifactId>
+			<version>1.0.0</version>
+			<classifier>oas</classifier>
+			<type>zip</type>
+		</dependency>
+		
 
 	</dependencies>
 
@@ -91,6 +99,7 @@
 			<url>https://repository.mulesoft.org/releases/</url>
 			<layout>default</layout>
 		</repository>
+		
 	</repositories>
 
 	<pluginRepositories>
