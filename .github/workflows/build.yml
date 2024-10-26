@@ -60,7 +60,7 @@ jobs:
          servers: |
                 [
                   {
-                    "id": "anypoint-exchange-v2",
+                    "id": "anypoint-exchange-v3",
                     "username": "${{ secrets.ANYPOINT_USERNAME }}",
                     "password": "${{ secrets.ANYPOINT_PASSWORD }}",
                     "configuration": {
@@ -131,7 +131,7 @@ jobs:
     # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
           java-version: 1.8   
       - name: Download a Build Artifact
-        uses: actions/download-artifact@v2.0.9
+        uses: actions/download-artifact@v3
         with:
         # Artifact name
           name: build_artifact
@@ -173,7 +173,7 @@ jobs:
     # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
           java-version: 1.8   
       - name: Download a Build Artifact
-        uses: actions/download-artifact@v2.0.9
+        uses: actions/download-artifact@v3
         with:
         # Artifact name
           name: build_artifact
@@ -211,7 +211,7 @@ jobs:
     # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
           java-version: 1.8   
       - name: Download a Build Artifact
-        uses: actions/download-artifact@v2.0.9
+        uses: actions/download-artifact@v3
         with:
         # Artifact name
           name: build_artifact
