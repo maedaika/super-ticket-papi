@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,74 +34,16 @@ jobs:
           name: mulesoft-app
           path: target/*.jar
 
-  deploy-dev:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: Development
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: mulesoft-app
-
-      - name: Deploy to Anypoint Platform (Development)
+      - name: Deploy to Anypoint Platform
         env:
           ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
           ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
         run: |
-          artifactName=$(ls *.jar | head -1)
+          artifactName=$(ls target/*.jar | head -1)
           mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
             -Dmule.artifact=$artifactName \
             -Danypoint.username=$ANYPOINT_USERNAME \
             -Danypoint.password=$ANYPOINT_PASSWORD \
-            -Danypoint.environment=dev -e -X
-
-  deploy-test:
-    needs: deploy-dev
-    runs-on: ubuntu-latest
-    environment: Test
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: mulesoft-app
-
-      - name: Deploy to Anypoint Platform (Test)
-        env:
-          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
-        run: |
-          artifactName=$(ls *.jar | head -1)
-          mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
-            -Dmule.artifact=$artifactName \
-            -Danypoint.username=$ANYPOINT_USERNAME \
-            -Danypoint.password=$ANYPOINT_PASSWORD \
-            -Danypoint.environment=test -e -X
-
-  deploy-production:
-    needs: deploy-test
-    runs-on: ubuntu-latest
-    environment: Production
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: mulesoft-app
-
-      - name: Deploy to Anypoint Platform (Production)
-        env:
-          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
-        run: |
-          artifactName=$(ls *.jar | head -1)
-          mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
-            -Dmule.artifact=$artifactName \
-            -Danypoint.username=$ANYPOINT_USERNAME \
-            -Danypoint.password=$ANYPOINT_PASSWORD \
-            -Danypoint.environment=prod -e -X
+            -Danypoint.environment=$ANYPOINT_ENVIRONMENT \
+            -e -X
