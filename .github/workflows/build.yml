@@ -114,7 +114,7 @@ jobs:
           ANYPOINT_TOKEN: ${{ secrets.ANYPOINT_TOKEN }}
         run: |
           artifactName=$(ls *.jar | head -1)
-          mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
+          mvn org.mule.tools.maven:mule-maven-plugin:3.8.2:deploy \
               -Dmule.artifact=$artifactName \
               -Dmule.token=$ANYPOINT_TOKEN \
               -e -X
