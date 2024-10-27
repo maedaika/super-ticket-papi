@@ -77,5 +77,4 @@ jobs:
             -Dmule.artifact=$artifactName \
             -Danypoint.username=$ANYPOINT_USERNAME \
             -Danypoint.password=$ANYPOINT_PASSWORD \
-            -Danypoint.environment=$ANYPOINT_ENVIRONMENT \
-            -e -X
+            -Danypoint.environment=$ANYPOINT_ENVIRONMENT 
