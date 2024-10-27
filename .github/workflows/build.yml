@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,6 +25,27 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Configure Maven settings for Anypoint Exchange
+        uses: whelk-io/maven-settings-xml-action@v16
+        with:
+          servers: |
+            [
+              {
+                "id": "anypoint-exchange-v3",
+                "username": "${{ secrets.ANYPOINT_USERNAME }}",
+                "password": "${{ secrets.ANYPOINT_PASSWORD }}"
+              }
+            ]
+          repositories: |
+            [
+              {
+                "id": "anypoint-exchange-v3",
+                "url": "https://maven.anypoint.mulesoft.com/api/v3/maven",
+                "releases": { "enabled": "true" },
+                "snapshots": { "enabled": "true" }
+              }
+            ]
+
       - name: Build and Package Application
         run: mvn clean package -e -X
 
@@ -33,6 +54,17 @@ jobs:
         with:
           name: mulesoft-app
           path: target/*.jar
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: mulesoft-app
 
       - name: Deploy to Anypoint Platform
         env:
