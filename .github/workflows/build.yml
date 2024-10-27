@@ -111,12 +111,10 @@ jobs:
 
       - name: Deploy to Anypoint Platform
         env:
-          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_TOKEN: ${{ secrets.ANYPOINT_TOKEN }}
         run: |
           artifactName=$(ls *.jar | head -1)
           mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
               -Dmule.artifact=$artifactName \
-              -Dmule.username=$ANYPOINT_USERNAME \
-              -Dmule.password=$ANYPOINT_PASSWORD \
+              -Dmule.token=$ANYPOINT_TOKEN \
               -e -X
