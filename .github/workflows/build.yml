@@ -12,10 +12,8 @@ on:
 
 jobs:
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
       - name: Cache
@@ -113,68 +111,12 @@ jobs:
 
       - name: Deploy to Anypoint Platform
         env:
-          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
         run: |
           artifactName=$(ls *.jar | head -1)
-          mvn mule:deploy -Dmule.artifact=$artifactName -Dusername=$USERNAME -Dpassword=$PASSWORD -e -X
-
-  deploy-test:
-    needs: deploy-dev
-    runs-on: ubuntu-latest
-    environment: Test
-    steps:
-      - uses: actions/checkout@v3
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-              ${{ runner.os }}-maven-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8   
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build_artifact
-
-      - name: Deploy to Anypoint Platform
-        env:
-          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
-        run: |
-          artifactName=$(ls *.jar | head -1)
-          mvn mule:deploy -Dmule.artifact=$artifactName -Dusername=$USERNAME -Dpassword=$PASSWORD -e -X
-
-  deploy-production:
-    needs: deploy-test
-    runs-on: ubuntu-latest
-    environment: Production
-    steps:
-      - uses: actions/checkout@v3
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-              ${{ runner.os }}-maven-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8   
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build_artifact
-
-      - name: Deploy to Anypoint Platform
-        env:
-          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
-        run: |
-          artifactName=$(ls *.jar | head -1)
-          mvn mule:deploy -Dmule.artifact=$artifactName -Dusername=$USERNAME -Dpassword=$PASSWORD -e -X
+          mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
+              -Dmule.artifact=$artifactName \
+              -Dmule.username=$ANYPOINT_USERNAME \
+              -Dmule.password=$ANYPOINT_PASSWORD \
+              -e -X
