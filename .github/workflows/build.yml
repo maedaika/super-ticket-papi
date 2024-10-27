@@ -1,10 +1,6 @@
-# This is a basic workflow to help you get started with Actions
+name: MuleSoft CI/CD Pipeline
 
-name: MuleSoft deployment with GitHub Actions CI
-
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
   pull_request:
@@ -12,112 +8,55 @@ on:
 
 jobs:
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
-      - name: Cache
+
+      - name: Cache Maven Repository
         uses: actions/cache@v3
         with:
-          path: /home/runner/.m2/repository
+          path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-              ${{ runner.os }}-maven-
-      - name: Setup Java JDK
+            ${{ runner.os }}-maven-
+
+      - name: Set up Java
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8   
-      - name: maven-settings-xml-action
-        uses: whelk-io/maven-settings-xml-action@v16
-        with:
-          repositories: |
-                [
-                  {
-                    "id": "MuleRepository",
-                    "name": "MuleRepository",
-                    "url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/",
-                    "releases": {
-                      "enabled": "true"
-                    },
-                    "snapshots": {
-                      "enabled": "true"
-                    }
-                  }
-                ]
-          servers: |
-                [
-                  {
-                    "id": "anypoint-exchange-v3",
-                    "username": "${{ secrets.ANYPOINT_USERNAME }}",
-                    "password": "${{ secrets.ANYPOINT_PASSWORD }}",
-                    "configuration": {
-                      "httpConfiguration": {
-                        "all": {
-                          "usePreemptive": "true"
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "id": "MuleRepository",
-                    "username": "${{ secrets.ENT_ID }}",
-                    "password": "${{ secrets.ENT_PASSWORD }}",
-                    "configuration": {
-                      "httpConfiguration": {
-                        "all": {
-                          "usePreemptive": "true"
-                        }
-                      }
-                    }
-                  }
-                ]      
+          java-version: 1.8
 
-      - name: Build
+      - name: Build and Package Application
         run: mvn clean package -e -X
 
-      - name: Artifact file name with commit hash
-        run: |
-          artifactName1=$(ls target/*.jar | head -1)
-          commitHash=$(git rev-parse --short "$GITHUB_SHA")
-          artifactName2=$(echo $artifactName1 | sed "s/.jar/.$commitHash.jar/g")
-          mv $artifactName1 $artifactName2
-          
-      - name: Upload a Build Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: build_artifact
+          name: mulesoft-app
           path: target/*.jar
 
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
+    environment: Development
     steps:
       - uses: actions/checkout@v3
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-              ${{ runner.os }}-maven-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8   
-      - name: Download a Build Artifact
+
+      - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
-          name: build_artifact
+          name: mulesoft-app
 
-      - name: Deploy to Anypoint Platform
+      - name: Deploy to Anypoint Platform (Development)
         env:
-          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
         run: |
           artifactName=$(ls *.jar | head -1)
-          mvn mule:deploy -Dmule.artifact=$artifactName -Dusername=$USERNAME -Dpassword=$PASSWORD -e -X
+          mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
+            -Dmule.artifact=$artifactName \
+            -Danypoint.username=$ANYPOINT_USERNAME \
+            -Danypoint.password=$ANYPOINT_PASSWORD \
+            -Danypoint.environment=dev -e -X
 
   deploy-test:
     needs: deploy-dev
@@ -125,29 +64,23 @@ jobs:
     environment: Test
     steps:
       - uses: actions/checkout@v3
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-              ${{ runner.os }}-maven-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8   
-      - name: Download a Build Artifact
+
+      - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
-          name: build_artifact
+          name: mulesoft-app
 
-      - name: Deploy to Anypoint Platform
+      - name: Deploy to Anypoint Platform (Test)
         env:
-          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
         run: |
           artifactName=$(ls *.jar | head -1)
-          mvn mule:deploy -Dmule.artifact=$artifactName -Dusername=$USERNAME -Dpassword=$PASSWORD -e -X
+          mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
+            -Dmule.artifact=$artifactName \
+            -Danypoint.username=$ANYPOINT_USERNAME \
+            -Danypoint.password=$ANYPOINT_PASSWORD \
+            -Danypoint.environment=test -e -X
 
   deploy-production:
     needs: deploy-test
@@ -155,26 +88,20 @@ jobs:
     environment: Production
     steps:
       - uses: actions/checkout@v3
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-              ${{ runner.os }}-maven-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8   
-      - name: Download a Build Artifact
+
+      - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
-          name: build_artifact
+          name: mulesoft-app
 
-      - name: Deploy to Anypoint Platform
+      - name: Deploy to Anypoint Platform (Production)
         env:
-          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
         run: |
           artifactName=$(ls *.jar | head -1)
-          mvn mule:deploy -Dmule.artifact=$artifactName -Dusername=$USERNAME -Dpassword=$PASSWORD -e -X
+          mvn org.mule.tools.maven:mule-maven-plugin:3.8.0:deploy \
+            -Dmule.artifact=$artifactName \
+            -Danypoint.username=$ANYPOINT_USERNAME \
+            -Danypoint.password=$ANYPOINT_PASSWORD \
+            -Danypoint.environment=prod -e -X
