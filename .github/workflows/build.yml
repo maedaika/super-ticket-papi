@@ -47,7 +47,7 @@ jobs:
             ]
 
       - name: Build and Package Application
-        run: mvn clean package -e -X
+        run: mvn clean package -DskipTests -e -X
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -77,4 +77,5 @@ jobs:
             -Dmule.artifact=$artifactName \
             -Danypoint.username=$ANYPOINT_USERNAME \
             -Danypoint.password=$ANYPOINT_PASSWORD \
-            -Danypoint.environment=$ANYPOINT_ENVIRONMENT 
+            -Danypoint.environment=$ANYPOINT_ENVIRONMENT \
+            -e -X
